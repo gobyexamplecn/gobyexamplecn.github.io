@@ -45,7 +45,7 @@
             
           </td>
           <td class="code leading">
-            <a href="http://play.golang.org/p/HBLH7B0SxOR"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+            <a href="http://play.golang.org/p/bF9FfwzJoty"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
           <div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
 </pre></div>
 
@@ -83,14 +83,17 @@
         
         <tr>
           <td class="docs">
-            <p>Go 通过向一个通道发送 <code>os.Signal</code> 值来发送信号通知。
-我们将创建一个通道来接收这些通知（同时再创建一个在程序结束时发送通知的通道）。</p>
+            <p>Go signal notification works by sending <code>os.Signal</code>
+values on a channel. We&rsquo;ll create a channel to
+receive these notifications. Note that this channel
+should be buffered.
+Go 通过向一个通道发送 <code>os.Signal</code> 值来发送信号通知。
+我们将创建一个通道来接收这些通知。请注意，这个通道应该被缓存。</p>
 
           </td>
           <td class="code leading">
             
           <div class="highlight"><pre>    <span class="nx">sigs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Signal</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
           </td>
@@ -111,6 +114,21 @@
         
         <tr>
           <td class="docs">
+            <p>我们可以在 main 函数中从 <code>sigs</code> 接收。
+但让我们看看如何在单独的 goroutine 中完成此操作，
+以演示更实际的正常关闭方案。</p>
+
+          </td>
+          <td class="code leading">
+            
+          <div class="highlight"><pre>    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="docs">
             <p>这个协程执行一个阻塞的信号接收操作。
 当它接收到一个值时，它将打印这个值，然后通知程序可以退出。</p>
 
@@ -118,7 +136,18 @@
           <td class="code leading">
             
           <div class="highlight"><pre>    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">sig</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">sigs</span>
+</pre></div>
+
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="docs">
+            
+          </td>
+          <td class="code leading">
+            
+          <div class="highlight"><pre>        <span class="nx">sig</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">sigs</span>
         <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">()</span>
         <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">sig</span><span class="p">)</span>
         <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
@@ -130,8 +159,10 @@
         
         <tr>
           <td class="docs">
-            <p>程序将在这里进行等待，直到它得到了期望的信号
-（也就是上面的协程发送的 <code>done</code> 值），然后退出。</p>
+            <pre><code>程序将在这里进行等待，直到它得到了期望的信号
+</code></pre>
+
+<p>（也就是上面的协程发送的 <code>done</code> 值），然后退出。</p>
 
           </td>
           <td class="code">
@@ -181,7 +212,7 @@
     </div>
     <script>
       var codeLines = [];
-      codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A    \"os/signal\"\u000A    \"syscall\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    sigs := make(chan os.Signal, 1)\u000A    done := make(chan bool, 1)\u000A');codeLines.push('    signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)\u000A');codeLines.push('    go func() {\u000A        sig := \x3C-sigs\u000A        fmt.Println()\u000A        fmt.Println(sig)\u000A        done \x3C- true\u000A    }()\u000A');codeLines.push('    fmt.Println(\"awaiting signal\")\u000A    \x3C-done\u000A    fmt.Println(\"exiting\")\u000A}\u000A');codeLines.push('');
+      codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A    \"os/signal\"\u000A    \"syscall\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    sigs :\u003D make(chan os.Signal, 1)\u000A');codeLines.push('    signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)\u000A');codeLines.push('    done :\u003D make(chan bool, 1)\u000A');codeLines.push('    go func() {\u000A');codeLines.push('        sig :\u003D \u003C-sigs\u000A        fmt.Println()\u000A        fmt.Println(sig)\u000A        done \u003C- true\u000A    }()\u000A');codeLines.push('    fmt.Println(\"awaiting signal\")\u000A    \u003C-done\u000A    fmt.Println(\"exiting\")\u000A}\u000A');codeLines.push('');
     </script>
     <script src="site.js" async></script>
   </body>

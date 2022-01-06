@@ -117,6 +117,18 @@
 输出一个错误消息和协程追踪信息，并以非零的状态退出程序。</p>
 
           </td>
+          <td class="code empty leading">
+            
+          
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="docs">
+            <p>当 <code>main</code> 中触发第一个 panic 时，程序就会退出而不会执行代码的其余部分。
+如果你想看到程序尝试创建 /tmp/file 文件，请注释掉第一个panic。</p>
+
+          </td>
           <td class="code leading">
             
           <div class="highlight"><pre><span class="gp">$</span> go run panic.go
@@ -167,7 +179,7 @@
     </div>
     <script>
       var codeLines = [];
-      codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"os\"\u000A');codeLines.push('func main() {\u000A');codeLines.push('    panic(\"a problem\")\u000A');codeLines.push('    _, err := os.Create(\"/tmp/file\")\u000A    if err != nil {\u000A        panic(err)\u000A    }\u000A}\u000A');codeLines.push('');codeLines.push('');codeLines.push('');
+      codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"os\"\u000A');codeLines.push('func main() {\u000A');codeLines.push('    panic(\"a problem\")\u000A');codeLines.push('    _, err :\u003D os.Create(\"/tmp/file\")\u000A    if err !\u003D nil {\u000A        panic(err)\u000A    }\u000A}\u000A');codeLines.push('');codeLines.push('');codeLines.push('');codeLines.push('');
     </script>
     <script src="site.js" async></script>
   </body>
